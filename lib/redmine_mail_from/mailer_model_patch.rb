@@ -9,7 +9,8 @@ module RedmineMailFrom
         '%l' => @author ? @author.lastname : nil,
         '%m' => (@author && @author.mail && !@author.pref.hide_mail) ?
         @author.mail : nil,
-        '%u' => @author ? @author.login : nil
+        '%u' => @author ? @author.login : nil,
+        '%p' => @issue ? @issue.project.name : nil
       }
 
       from = ''
