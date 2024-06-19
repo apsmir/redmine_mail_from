@@ -1,17 +1,16 @@
-require 'redmine'
-require_dependency 'redmine_mail_from/hooks'
-require_dependency 'redmine_mail_from/mailer_model_patch'
-
 Redmine::Plugin.register :redmine_mail_from do
   name 'Redmine Mail From plugin'
-  author 'Takeshi Nakamura'
+  author 'Takeshi Nakamura, Alexey Smirnov'
   description 'Extends mail "From:" header field'
-  version '2.0.0'
-  url 'https://github.com/taqueci/redmine_mail_from'
-  author_url 'https://github.com/taqueci'
+  version '3.0.0'
+  url 'https://github.com/apsmir/redmine_mail_from.git'
+  author_url 'https://github.com/apsmir'
 end
 
-Rails.configuration.to_prepare do
+require_dependency File.dirname(__FILE__) + '/lib/redmine_mail_from/hooks'
+require_dependency File.dirname(__FILE__) + '/lib/redmine_mail_from/mailer_model_patch'
+
+Rails.application.config.after_initialize do
   unless Mailer.included_modules.include?(RedmineMailFrom::MailerModelPatch)
     Mailer.send(:prepend, RedmineMailFrom::MailerModelPatch)
   end

@@ -2,6 +2,7 @@ require_dependency 'mailer'
 
 module RedmineMailFrom
   module MailerModelPatch
+
     def mail(headers={}, &block)
 
       placeholder = {
@@ -9,7 +10,8 @@ module RedmineMailFrom
         '%l' => @author ? @author.lastname : nil,
         '%m' => (@author && @author.mail && !@author.pref.hide_mail) ?
         @author.mail : nil,
-        '%u' => @author ? @author.login : nil
+        '%u' => @author ? @author.login : nil,
+        '%p' => @issue ? @issue.project.name : nil
       }
 
       from = ''
@@ -34,6 +36,9 @@ module RedmineMailFrom
 
       if @issue
         listid = "<#{@issue.project.identifier}.#{host}>"
+        if headers[:to].mail.split("@").last.upcase != from.split("@").last.upcase
+          headers[:subject] = "[#{@issue.project.name} - #{@issue.tracker.name} ##{@issue.id}] "
+        end
       else
         listid = "<#{host}>"
       end
