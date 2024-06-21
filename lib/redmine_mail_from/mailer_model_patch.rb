@@ -36,7 +36,13 @@ module RedmineMailFrom
 
       if @issue
         listid = "<#{@issue.project.identifier}.#{host}>"
-        if headers[:to].mail.split("@").last.upcase != from.split("@").last.upcase
+        to = headers[:to]
+        if to.is_a? User
+          u = headers[:to]
+        else
+          u = headers[:to][0]
+        end
+        if u.mail.split("@").last.upcase != from.split("@").last.upcase
           headers[:subject] = "[#{@issue.project.name} - #{@issue.tracker.name} ##{@issue.id}] "
         end
       else
